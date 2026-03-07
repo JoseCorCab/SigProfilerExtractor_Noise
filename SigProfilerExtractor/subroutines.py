@@ -1544,7 +1544,7 @@ def export_information(
         + str(i)
         + "_Signatures"
         + ".txt",
-        "\t",
+        sep="\t",
         index_label=[processes.columns.name],
     )
 
@@ -1562,7 +1562,7 @@ def export_information(
         + "_S"
         + str(i)
         + "_NMF_Activities.txt",
-        "\t",
+        sep="\t",
         index_label=[exposures.columns.name],
     )
 
@@ -1616,7 +1616,7 @@ def export_information(
         + str(i)
         + "_Signatures_SEM_Error"
         + ".txt",
-        "\t",
+        sep="\t",
         float_format="%.2E",
         index_label=[processes.columns.name],
     )
@@ -1636,7 +1636,7 @@ def export_information(
         + "_S"
         + str(i)
         + "_NMF_Activities_SEM_Error.txt",
-        "\t",
+        sep="\t",
         float_format="%.2E",
         index_label=[exposures.columns.name],
     )
@@ -1660,7 +1660,7 @@ def export_information(
         + str(i)
         + "_"
         + "Signatures_stats.txt",
-        "\t",
+        sep="\t",
         index_label="Signatures",
     )
 
@@ -1687,7 +1687,7 @@ def export_information(
         + str(i)
         + "_"
         + "NMF_Convergence_Information.txt",
-        "\t",
+        sep="\t",
         index_label="NMF_Replicate",
     )
 
@@ -2101,7 +2101,8 @@ def stabVsRError(
     # add % signs
     data.insert(1, "Considerable Solution", stable_solutions)
     data.insert(2, "P-value", probabilities)
-    data.iloc[:, 3:7] = data.iloc[:, 3:7].astype(str) + "%"
+    for col_name in data.columns[3:7]:
+        data[col_name] = data[col_name].astype(str) + "%"
     data = data.reset_index()
     columns_list = list(data.columns)
     columns_list[0] = "Signatures"
