@@ -1,12 +1,16 @@
-[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://osf.io/t6j7u/wiki/home/) 
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://sigprofilersuite.github.io/SigProfilerExtractor/)
 [![License](https://img.shields.io/badge/License-BSD\%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
-[![Build Status](https://app.travis-ci.com/AlexandrovLab/SigProfilerExtractor.svg?branch=master)](https://app.travis-ci.com/AlexandrovLab/SigProfilerExtractor)
+[![CI](https://github.com/SigProfilerSuite/SigProfilerExtractor/actions/workflows/ci.yml/badge.svg)](https://github.com/SigProfilerSuite/SigProfilerExtractor/actions/workflows/ci.yml)
 
 # SigProfilerExtractor
 SigProfilerExtractor allows de novo extraction of mutational signatures from data generated in a matrix format. 
 The tool identifies the number of operative mutational signatures, their activities in each sample, and the probability 
 for each signature to cause a specific mutation type in a cancer sample. The tool makes use of SigProfilerMatrixGenerator 
-and SigProfilerPlotting. Detailed documentation can be found at: https://osf.io/t6j7u/wiki/home/
+and SigProfilerPlotting.
+
+## Documentation
+
+Full documentation is available in `docs/` (rendered via MkDocs): https://sigprofilersuite.github.io/SigProfilerExtractor/
 
 # Table of contents
 - [Installation](#installation)
@@ -93,7 +97,7 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 | Category | Parameter | Variable Type | Parameter Description |
 | --------- | --------------------- | -------- |-------- |
 | **Input Data** |  |  | |
-|  | **input_type** | String | The type of input:<br><ul><li>`"vcf"`: used for vcf format inputs.</li><li>`"matrix"`: used for table format inputs using a tab separated file.</li><li>`"bedpe"`: used for bedpe files with each SV annotated with its type, size bin, and clustered/non-clustered status. Please check the required format at https://github.com/AlexandrovLab/SigProfilerMatrixGenerator#structural-variant-matrix-generation.</li><li>`"seg:TYPE"`: used for a multi-sample segmentation file for copy number analysis. Please check the required format at https://github.com/AlexandrovLab/SigProfilerMatrixGenerator#copy-number-matrix-generation. The accepted callers for TYPE are the following {"ASCAT", "ASCAT_NGS", "SEQUENZA", "ABSOLUTE", "BATTENBERG", "FACETS", "PURPLE", "TCGA"}. For example, when using segmentation file from BATTENBERG then set input_type to "seg:BATTENBERG".</li></ul> |
+|  | **input_type** | String | The type of input:<br><ul><li>`"vcf"`: used for vcf format inputs.</li><li>`"matrix"`: used for table format inputs using a tab separated file.</li><li>`"bedpe"`: used for bedpe files with each SV annotated with its type, size bin, and clustered/non-clustered status. Please check the required format at https://github.com/SigProfilerSuite/SigProfilerMatrixGenerator#structural-variant-matrix-generation.</li><li>`"seg:TYPE"`: used for a multi-sample segmentation file for copy number analysis. Please check the required format at https://github.com/SigProfilerSuite/SigProfilerMatrixGenerator#copy-number-matrix-generation. The accepted callers for TYPE are the following {"ASCAT", "ASCAT_NGS", "SEQUENZA", "ABSOLUTE", "BATTENBERG", "FACETS", "PURPLE", "TCGA"}. For example, when using segmentation file from BATTENBERG then set input_type to "seg:BATTENBERG".</li></ul> |
 |  | **output** | String | The name of the output folder. The output folder will be generated in the current working directory.  |
 |  | **input_data** | String | <br>Path to input folder for input_type:<ul><li>`vcf`</li><li>`bedpe`</li></ul>Path to file for input_type:<ul><li>`matrix`</li><li>`seg:TYPE`</li></ul> |
 |  | **reference_genome** | String | The name of the reference genome (default: `"GRCh37"`). This parameter is applicable only if the `input_type` is `"vcf"`. |
@@ -116,6 +120,7 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 |  | **nmf_tolerance** | Float | Value defines the tolerance to achieve to converge (default: `1e-15`).|
 | **Execution** |  |  |  | 
 |  | **cpu** | Integer | The number of processors to be used to extract the signatures (default: all processors). |
+|  | **assignment_cpu** | Integer | Number of processors to be used by SigProfilerAssignment for the final signature assignment step (default: all available). This is independent of the `cpu` parameter. |
 |  | **gpu** | Boolean | Defines if the GPU resource will used if available (default: `False`). If `True`, the GPU resources will be used in the computation. *Note: All available CPU processors are used by default, which may cause a memory error. This error can be resolved by reducing the number of CPU processes through the `cpu` parameter.*|
 |  | **batch_size** | Integer | Will be effective only if the GPU is used. Defines the number of NMF replicates to be performed by each CPU during the parallel processing (default: `1`). *Note: For `batch_size` values greater than 1, each NMF replicate will update until `max_nmf_iterations` is reached.*|
 | **Solution Estimation Thresholds** |  |  |  | 
@@ -124,7 +129,7 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 |  | **combined_stability** | Float | The cutoff thresh-hold of the combined stability (sum of average and minimum stability) (default: `1.0`). Solutions with combined stabilities below this thresh-hold will not be considered. |
 |  | **allow_stability_drop** | Boolean | Defines if solutions with a drop in stability with respect to the highest stable number of signatures will be considered (default: `False`). |
 | **Decomposition** |  |  |  | 
-|  | **cosmic_version** | Float | Defines the version of the COSMIC reference signatures (default: `3.4`). Takes a positive float among `1`, `2`, `3`, `3.1`, `3.2`, `3.3`, and `3.4`.|
+|  | **cosmic_version** | Float | Defines the version of the COSMIC reference signatures (default: `3.5`). Takes a positive float among `1`, `2`, `3`, `3.1`, `3.2`, `3.3`, `3.4`, and `3.5`.|
 |  | **make_decomposition_plots** | Boolean | Generate de novo to COSMIC signature decomposition plots as part of the results (default: `True`). Set to `False` to skip generating these plots. |
 |  | **collapse_to_SBS96** | Boolean | If `True`, SBS288 and SBS1536 de novo signatures will be mapped to SBS96 reference signatures (default: `True`). If `False`, those will be mapped to reference signatures of the same context.
 | **Others** |  |  |  | 
@@ -160,7 +165,7 @@ if __name__=="__main__":
 ```
 
 #### sigProfilerExtractor Output
-To learn about the output, please visit https://osf.io/t6j7u/wiki/home/
+To learn about the output, see `docs/output.md`.
   
 
 ### <a name="estimate_solution"></a> Estimation of the Optimum Solution
@@ -217,7 +222,7 @@ The files below will be generated in the output folder:
 
 ### <a name="decompose"></a> Decompose
 
-For decomposition of de novo signatures please use [SigProfilerAssignment](https://github.com/AlexandrovLab/SigProfilerAssignment)
+For decomposition of de novo signatures please use [SigProfilerAssignment](https://github.com/SigProfilerSuite/SigProfilerAssignment)
         
 ### <a name="plotActivity"></a> Activity Stacked Bar Plot
 Generates a stacked bar plot showing activities in individuals
@@ -256,7 +261,7 @@ Take a look at our video tutorials for step-by-step instructions on how to insta
 
 If CUDA out of memory exceptions occur, it will be necessary to reduce the number of CPU processes used (the `cpu` parameter).
 
-#### For more information, help, and examples, please visit: https://osf.io/t6j7u/wiki/home/
+#### For more information, help, and examples, please start at `docs/index.md`.
 
 ## <a name="citation"></a> Citation
 Islam SMA, Díaz-Gay M, Wu Y, Barnes M, Vangara R, Bergstrom EN, He Y, Vella M, Wang J, Teague JW, Clapham P, Moody S, Senkin S, Li YR, Riva L, Zhang T, Gruber AJ, Steele CD, Otlu B, Khandekar A, Abbasi A, Humphreys L, Syulyukina N, Brady SW, Alexandrov BS, Pillay N, Zhang J, Adams DJ, Martincorena I, Wedge DC, Landi MT, Brennan P, Stratton MR, Rozen SG, and Alexandrov LB (2022) Uncovering novel mutational signatures by _de novo_ extraction with SigProfilerExtractor. __Cell Genomics__. doi: [10.1016/j.xgen.2022.100179](https://doi.org/10.1016/j.xgen.2022.100179).
