@@ -1039,8 +1039,7 @@ def sigProfilerExtractor(
         all_stats.to_csv(layer_directory + "/All_solutions_stat.csv", sep=",")
 
         # write the name of Samples and Matrix participating in each Layer.
-        layer_genome = pd.DataFrame(genomes)
-        layer_genome = layer_genome.set_index(index)
+        layer_genome = pd.DataFrame(genomes, index=pd.Index(list(index)))
         layer_genome.columns = colnames
         layer_genome = layer_genome.rename_axis("MutationType", axis="columns")
 

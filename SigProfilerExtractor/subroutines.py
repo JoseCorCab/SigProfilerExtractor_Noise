@@ -1530,8 +1530,8 @@ def export_information(
     )
 
     # First exporting the Average of the processes
-    processAvg = pd.DataFrame(processAvg)
-    processes = processAvg.set_index(index)
+    processAvg = pd.DataFrame(processAvg, index=pd.Index(list(index)))
+    processes = processAvg
     processes.columns = listOfSignatures
     processes = processes.rename_axis("MutationType", axis="columns")
     # print(processes)
@@ -1604,8 +1604,7 @@ def export_information(
     # get the standard errors of the processes
     processSTE = loopResults[3]
     # export the processStd file
-    processSTE = pd.DataFrame(processSTE)
-    processSTE = processSTE.set_index(index)
+    processSTE = pd.DataFrame(processSTE, index=pd.Index(list(index)))
     processSTE.columns = listOfSignatures
     processSTE = processSTE.rename_axis("MutationType", axis="columns")
     processSTE.to_csv(
