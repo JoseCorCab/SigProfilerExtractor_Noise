@@ -12,16 +12,16 @@ This branch adds tag-driven Python package publishing with `setuptools_scm` and 
 
 The release workflow is in [.github/workflows/release.yml](./.github/workflows/release.yml).
 
-- Push a tag matching `v*`:
-  - build sdist and wheel
-  - run `twine check`
-  - publish to TestPyPI
-- Publish a GitHub Release:
-  - build sdist and wheel
-  - run `twine check`
-  - publish to PyPI
+- Push a git tag whose name starts with `v`, such as `v1.2.8`:
+  - this is a git event
+  - it happens when you run `git push origin v1.2.8`
+  - it triggers build + `twine check` + publish to TestPyPI
+- Publish a GitHub Release for an existing tag such as `v1.2.8`:
+  - this is a GitHub UI/API release event, not just a git tag event
+  - it happens when you create or publish a Release on GitHub from that tag
+  - it triggers build + `twine check` + publish to PyPI
 
-This keeps TestPyPI as the first stop and PyPI as the explicit release action.
+This split keeps TestPyPI as the first stop and PyPI as the explicit release action.
 
 ## GitHub environment setup
 
@@ -73,7 +73,7 @@ If the project does not yet exist on TestPyPI or PyPI, create the trusted publis
 
 ## Release flow
 
-### TestPyPI dry run
+### Step 1: TestPyPI dry run by pushing a tag
 
 1. Merge release-ready changes into `master`.
 2. Create and push a tag:
@@ -81,11 +81,15 @@ If the project does not yet exist on TestPyPI or PyPI, create the trusted publis
    - `git push origin v1.2.8`
 3. Confirm TestPyPI publish succeeds.
 
-### PyPI publish
+This step does not require a GitHub Release yet. It only requires the git tag to exist on GitHub.
+
+### Step 2: PyPI publish by publishing a GitHub Release
 
 1. Create a GitHub Release from the same tag `v1.2.8`.
 2. Publish the GitHub Release.
 3. Confirm the PyPI publish job succeeds.
+
+This step uses the already-pushed tag, but the trigger is the Release publication event on GitHub.
 
 ## Notes
 
