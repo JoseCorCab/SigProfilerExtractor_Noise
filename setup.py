@@ -1,40 +1,11 @@
-from setuptools import setup
-import shutil
-import os
-import sys
-import subprocess
+from pathlib import Path
 
-# remove the dist folder first if exists
-if os.path.exists("dist"):
-    shutil.rmtree("dist")
-
-VERSION = "1.2.7"
+from setuptools import find_namespace_packages, setup
 
 
-with open("README.md") as f:
-    long_description = f.read()
+LONG_DESCRIPTION = Path("README.md").read_text(encoding="utf-8")
 
-
-def write_version_py(filename="SigProfilerExtractor/version.py"):
-    # Copied from numpy setup.py
-    cnt = """
-# THIS FILE IS GENERATED FROM SIGPROFILEREXTRACTOR SETUP.PY
-short_version = '%(version)s'
-version = '%(version)s'
-Update = 'v1.2.7: Removed nimfa dependency and implemented NNDSVD directly for NumPy 2.0 compatibility'
-    
-    """
-    fh = open(filename, "w")
-    fh.write(
-        cnt
-        % {
-            "version": VERSION,
-        }
-    )
-    fh.close()
-
-
-requirements = [
+INSTALL_REQUIRES = [
     "scipy>=1.6.3",
     "torch>=1.8.1",
     "numpy>=2.0.0",
@@ -47,61 +18,25 @@ requirements = [
     "psutil>=5.6.1",
 ]
 
-operating_system = sys.platform
-print(operating_system)
-if operating_system in ["win32", "cygwin", "windows"]:
-    requirements.remove("matplotlib>=3.3.0")
-    requirements.remove("torch==1.5.1")
-    print("Trying to install pytorch!")
-    code = 1
-    try:
-        code = subprocess.call(
-            [
-                "pip",
-                "install",
-                "torch===1.5.1+cpu",
-                "-f",
-                "https://download.pytorch.org/whl/torch_stable.html",
-            ]
-        )
-        if code != 0:
-            raise Exception("Torch  instalation failed !")
-    except:
-        try:
-            code = subprocess.call(
-                [
-                    "pip3",
-                    "install",
-                    "torch===1.5.1+cpu",
-                    "-f",
-                    "https://download.pytorch.org/whl/torch_stable.html",
-                ]
-            )
-            if code != 0:
-                raise Exception("Torch instalation failed !")
-        except:
-            print(
-                "Failed to install pytorch, please install pytorch manually be following the simple instructions over at: https://pytorch.org/get-started/locally/"
-            )
-    if code == 0:
-        print(
-            "Successfully installed pytorch version! (If you need the GPU version, please install it manually, checkout the mindsdb docs and the pytroch docs if you need help)"
-        )
+VERSION_TEMPLATE = "version = '{version}'\n"
 
 
-write_version_py()
 setup(
     name="SigProfilerExtractor",
-    version=VERSION,
+    use_scm_version={
+        "write_to": "SigProfilerExtractor/_version.py",
+        "write_to_template": VERSION_TEMPLATE,
+        "fallback_version": "0+unknown",
+    },
     description="Extracts mutational signatures from mutational catalogues",
-    long_description=long_description,
-    long_description_content_type="text/markdown",  # This is important!
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/markdown",
     url="https://github.com/SigProfilerSuite/SigProfilerExtractor.git",
     author="S Mishu Ashiqul Islam",
     author_email="m0islam@ucsd.edu",
     license="UCSD",
-    packages=["SigProfilerExtractor"],
-    install_requires=requirements,
+    packages=find_namespace_packages(include=["SigProfilerExtractor*"]),
+    install_requires=INSTALL_REQUIRES,
     include_package_data=True,
     python_requires=">=3.9",
     entry_points={
